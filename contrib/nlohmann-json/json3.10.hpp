@@ -4323,13 +4323,22 @@ struct from_json_fn
 };
 }  // namespace detail
 
+#if __cplusplus >= 201703L
+    #define JSON_INLINE_VARIABLE inline
+#else
+    #define JSON_INLINE_VARIABLE
+#endif
 /// namespace to hold default `from_json` function
 /// to see why this is required:
 /// http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html
+#if __cplusplus < 201703L
 namespace // NOLINT(cert-dcl59-cpp,fuchsia-header-anon-namespaces,google-build-namespaces)
 {
-constexpr const auto& from_json = detail::static_const<detail::from_json_fn>::value; // NOLINT(misc-definitions-in-headers)
+#endif
+JSON_INLINE_VARIABLE constexpr const auto& from_json = detail::static_const<detail::from_json_fn>::value; // NOLINT(misc-definitions-in-headers)
+#if __cplusplus < 201703L
 } // namespace
+#endif
 } // namespace nlohmann
 
 // #include <nlohmann/detail/conversions/to_json.hpp>
@@ -4930,10 +4939,14 @@ struct to_json_fn
 /// namespace to hold default `to_json` function
 /// to see why this is required:
 /// http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html
+#if __cplusplus < 201703L
 namespace // NOLINT(cert-dcl59-cpp,fuchsia-header-anon-namespaces,google-build-namespaces)
 {
-constexpr const auto& to_json = detail::static_const<detail::to_json_fn>::value; // NOLINT(misc-definitions-in-headers)
+#endif
+JSON_INLINE_VARIABLE constexpr const auto& to_json = detail::static_const<detail::to_json_fn>::value; // NOLINT(misc-definitions-in-headers)
+#if __cplusplus < 201703L
 } // namespace
+#endif
 } // namespace nlohmann
 
 // #include <nlohmann/detail/meta/identity_tag.hpp>
